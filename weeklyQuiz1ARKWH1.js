@@ -1,104 +1,48 @@
-const arkFood = (harga, voucher, jarak, pajak) => {
-    let hargaDiskon, useVoucher, newHarga, pajakHarga, tarif, total
+const arkFood = (harga, voucher, jarak, pajak) =>{
+    let hasil = []
+    let totalHarga
+    //Perhitungan diskon
+    let hargaDiskon
     let tipe = typeof(voucher)
     let uper = voucher.toLocaleUpperCase()
     if (tipe != 'string' || (uper != 'ARKAFOODS' && uper != 'DITRAKTIRDEMY')) {
-        useVoucher = false
+        hargaDiskon = 0
     }else {
         if (uper == 'ARKAFOODS' && harga >= 50000) {
              hargaDiskon = harga * 50/100
             if (hargaDiskon>50000) {
                 hargaDiskon = 50000
-                newHarga = harga - 50000
-                useVoucher = true
-            }else{
-                 newHarga = harga - hargaDiskon
-                 useVoucher = true
             }
         }else if (uper == 'DITRAKTIRDEMY' && harga >= 25000){
-             hargaDiskon = harga * 60/100
+            hargaDiskon = harga * 60/100
             if (hargaDiskon>30000) {
                 hargaDiskon = 30000
-                newHarga = harga - 30000
-                useVoucher = true
-            }else{
-                newHarga = harga - hargaDiskon
-                useVoucher = true
             }
         }else {
-            let useVoucher = false
+            hargaDiskon = 0
         }
     }
-    if (pajak == true) {
-        if (jarak <= 2) {
-            if (useVoucher == true) {
-                 pajakHarga = harga * 5/100
-                 tarif = 5000
-                 total = newHarga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                 return hasil
-            }else{
-                 hargaDiskon = 0
-                 pajakHarga = harga * 5/100
-                 tarif = 5000
-                 total = harga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                 return hasil
-            }
-        }else{
-            if (useVoucher == true) {
-                 pajakHarga = harga * 5/100
-                 tarif = 5000 + 3000*(jarak - 2)
-                 total = newHarga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                 return hasil
-            }else{
-                 hargaDiskon = 0
-                 pajakHarga = harga * 5/100
-                 tarif = 5000 + 3000*(jarak - 2)
-                 total = harga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                 return hasil
-            }
-        }
+    //Perhitungan Pajak
+    let hargaPajak
+    if (pajak == true){
+        hargaPajak = harga * 5/10
     }else{
-        if (jarak <= 2) {
-            if (useVoucher == true) {
-                 pajakHarga = 0
-                 tarif = 5000
-                 total = newHarga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                 return hasil
-            }else{
-                 hargaDiskon = 0
-                 pajakHarga = 0
-                 tarif = 5000
-                 total = harga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                 return hasil
-            }
-        }else{
-            if (useVoucher == true) {
-                 pajakHarga = 0
-                 tarif = 5000 + 3000*(jarak - 2)
-                 total = newHarga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                 return hasil
-            }else{
-                 hargaDiskon = 0
-                 pajakHarga = 0
-                 tarif = 5000 + 3000*(jarak - 2)
-                 total = harga + pajakHarga + tarif
-                 const hasil = [harga, hargaDiskon, tarif, pajakHarga, total]
-                return hasil
-            }
-        }
+        hargaPajak = 0
     }
+    //Perhitungan Jarak
+    let tarif
+    if (jarak > 2) {
+        tarif = 5000 + 3000*(jarak-2)
+    }else{
+        tarif = 5000
+    }
+    totalHarga = harga - hargaDiskon + hargaPajak + tarif
+    hasil.push(harga, hargaDiskon, tarif, hargaPajak, totalHarga)
+    return hasil
 }
-
-const test = arkFood(30000, 'arkafoods', 5, true)
-console.log(test)//`Harga : ${harga}
-// Harga Diskon : ${hargaDiskon}
-// Tarif : ${tarif}
-// Pajak : ${pajakHarga}
-// Total : ${total}`);
+const hasil = arkFood(30000, 'ditraktirdemy', 2, false)
+console.log(`Harga : ${hasil[0]}
+Potongan : ${hasil[1]}
+Biaya Antar : ${hasil[2]}
+Pajak : ${hasil[3]}
+SubTotal : ${hasil[4]}`);
